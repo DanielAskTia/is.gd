@@ -1,25 +1,31 @@
-var https = require('https');
+const https = require('https')
 
 module.exports = {
     shorten: function(url, cb) {
-        https.get('https://is.gd/create.php?format=simple&url=' + encodeURIComponent(url), function (res) {
-            var body = '';
-            res.on('data', function(chunk) { body += chunk; });
-            res.on('end', function() { cb(body); });
-        });
+        return new Promise((resolve, reject) => {
+            https.get('https://is.gd/create.php?format=simple&url=' + encodeURIComponent(url), res => {
+                let body = ''
+                res.on('data', function(chunk) { body += chunk })
+                res.on('end', function() { resolve(cb(body)) })
+            }).on('error', e => { reject(cb(e)) })
+        })
     },
     custom: function(url, text, cb) {
-        https.get('https://is.gd/create.php?format=simple&url=' + encodeURIComponent(url) + '&shorturl=' + encodeURIComponent(text), function (res) {
-            var body = '';
-            res.on('data', function(chunk) { body += chunk; });
-            res.on('end', function() { cb(body); });
-        });
+        return new Promise((resolve, reject) => {
+            https.get('https://is.gd/create.php?format=simple&url=' + encodeURIComponent(url) + '&shorturl=' + encodeURIComponent(text), res => {
+                let body = ''
+                res.on('data', function(chunk) { body += chunk })
+                res.on('end', function() { resolve(cb(body)) })
+            }).on('error', e => { reject(cb(e)) })
+        })
     },
     lookup: function(url, cb) {
-        https.get('https://is.gd/forward.php?format=simple&shorturl=' + encodeURIComponent(url), function (res) {
-            var body = '';
-            res.on('data', function(chunk) { body += chunk; });
-            res.on('end', function() { cb(body); });
-        });
+        return new Promise((resolve, reject) => {
+            https.get('https://is.gd/forward.php?format=simple&shorturl=' + encodeURIComponent(url), res => {
+                let body = ''
+                res.on('data', function(chunk) { body += chunk })
+                res.on('end', function() { resolve(cb(body)) })
+            }).on('error', e => { reject(cb(e)) })
+        })
     }
-};
+}
